@@ -195,6 +195,7 @@ impl CC2500 {
      * Once it's read it will print it. In future this should be persisted for other calls
      */
     pub fn read_address(&mut self) -> Option<Address> {
+        println!("Reading address of original ansluta. Press the button!");
         loop {
             self.strobe(STATE::SRX);
             self.write_reg(REG_IOCFG1, 0x01); // Switch MISO to output if packet has been received
@@ -203,9 +204,6 @@ impl CC2500 {
             let packet_length = self.read_reg(REG_FIFO) as usize;
             let mut packet = vec![0; packet_length as usize];
 
-            if packet_length > 8 {
-                println!("Received packet is to big {}", packet_length);
-            }
             // Read packet from FIFO buffer
             if packet_length > 0 && packet_length <= 8 {
                 println!("Received packet");
