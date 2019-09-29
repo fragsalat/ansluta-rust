@@ -1,0 +1,35 @@
+[package]
+name = "cc2500"
+version = "0.1.0"
+authors = ["tschl"]
+edition = "2018"
+target = "armv7-unknown-linux-gnueabihf"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rppal = "0.11.3"
+log = "0.4.8"
+
+[target.armv7-unknown-linux-gnueabihf]
+linker = "arm-linux-gnueabihf-gcc-8"
+ar = "arm-linux-gnueabihf-ar"
+
+[tasks.compile]
+command = "cargo"
+args = ["build", "--target", "armv7-unknown-linux-gnueabihf"]
+
+[tasks.upload]
+command = "scp"
+args = ["./target/armv7-unknown-linux-gnueabihf/debug/cc2500", "pi@xxx.xxx.xxx.xxx:"]
+
+[tasks.gdb]
+command = "ssh"
+args = ["pi@xxx.xxx.xxx.xxx", "gdbserver 0.0.0.0:2345 ./cc2500"]
+
+[tasks.debug-raspberry]
+dependencies = [
+    "compile",
+    "upload",
+#    "gdb"
+]
